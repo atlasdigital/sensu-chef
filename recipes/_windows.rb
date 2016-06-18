@@ -41,6 +41,7 @@ end
 
 windows_feature "NetFx3" do
   source node["sensu"]["windows"]["dism_source"]
+  not_if { win_version.windows_server_2008? }
 end
 
 windows_package "Sensu" do
