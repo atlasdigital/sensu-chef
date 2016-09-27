@@ -1,5 +1,7 @@
 require 'chefspec'
-require 'chefspec/librarian'
+require 'chefspec/berkshelf'
+
+ChefSpec::Coverage.start!
 
 RSpec.shared_context('sensu data bags') do
   let(:ssl_data_bag_item) do

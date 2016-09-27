@@ -1,8 +1,6 @@
 ---
 driver:
   name: vagrant
-  customize:
-    memory: 512
 
 provisioner:
   name: chef_zero
@@ -10,19 +8,33 @@ provisioner:
 platforms:
   - name: ubuntu-12.04
   - name: ubuntu-14.04
+  - name: ubuntu-16.04
   - name: centos-5.11
-  - name: centos-6.5
-    driver:
-      box: opscode-centos-6.5
-  - name: windows-2012-r2
+  - name: centos-6.8
+  - name: centos-7.2
+  - name: windows-2008-r2
+    transport:
+      name: winrm
+      elevated: true
     driver:
       http_proxy: null
       https_proxy: null
-      box: windows-2012r2
+      box: windows-2008r2
       customize:
         memory: 2048
-    provisioner:
-      windows_chef_zero
+    attributes:
+      lsb:
+        codename: windows
+  - name: windows-2012-r2
+    transport:
+      name: winrm
+      elevated: true
+    driver:
+      http_proxy: null
+      https_proxy: null
+      box: mwrock/Windows2012R2
+    customize:
+      memory: 2048
     attributes:
       lsb:
         codename: windows
@@ -35,29 +47,30 @@ suites:
     attributes:
       sensu:
         group: nogroup
-        windows:
-          dism_source: <%= ENV['SENSU_WINDOWS_DISM_SOURCE'] %>
   - name: sysv
     run_list:
       - recipe[sensu-test]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2
       - centos-5.11
-      - centos-6.5
   - name: runit
     run_list:
       - recipe[sensu-test::runit]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2
   - name: encrypted
     run_list:
       - recipe[sensu-test]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2
   - name: acls
     run_list:
       - recipe[sensu-test]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2
       - centos-5.11
     attributes:
@@ -68,6 +81,7 @@ suites:
     run_list:
       - recipe[sensu-test]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2
       - centos-5.11
     attributes:
@@ -86,6 +100,7 @@ suites:
     run_list:
       - recipe[sensu-test::enterprise]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2
   - name: enterprise-dashboard
     attributes:
@@ -95,9 +110,11 @@ suites:
     run_list:
       - recipe[sensu-test::enterprise_dashboard]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2
   - name: run-state-helpers
     run_list:
       - recipe[sensu-test::run_state_helpers]
     excludes:
+      - windows-2008-r2
       - windows-2012-r2

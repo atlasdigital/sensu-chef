@@ -1,8 +1,13 @@
 require_relative "../spec_helper"
 
-describe 'sensu-test::gem_lwrp' do
+describe 'sensu_gem' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(:step_into => ['sensu_gem']).converge(described_recipe)
+    ChefSpec::SoloRunner.new(
+      :step_into => ['sensu_gem'],
+      :file_cache_path => '/tmp',
+      :platform => 'ubuntu',
+      :version => '14.04'
+    ).converge('sensu-test::gem_lwrp')
   end
 
   it 'defaults to action :install' do
@@ -22,7 +27,7 @@ describe 'sensu-test::gem_lwrp' do
 
     context 'source specified' do
       it 'installs the specified gem package from the specified source' do
-        expect(chef_run).to install_gem_package('sensu-plugins-cpu-checks').with(:source => '/tmp/sensu-plugins-cpu-checks.gem')
+        expect(chef_run).to install_gem_package('sensu-plugins-memory-checks').with(:source => '/tmp/sensu-plugins-memory-checks.gem')
       end
     end
   end
